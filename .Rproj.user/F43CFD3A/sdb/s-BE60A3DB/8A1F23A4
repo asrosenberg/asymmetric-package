@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "library(asymmetric)\ndat_gdp <- load_dataset(\"gdp_ppp\")\ndat_life <- load_dataset(\"life_expect\")\n# log GDP\ndat_gdp[, 2:217] <- log(dat_gdp[, 2:217])\n\ncolumnsgdp <- c(\"state\", paste(\"gdp\",seq(from = 1800, to = 2015), sep = \"_\"))\ncolumnslife <- c(\"state\", paste(\"life\",seq(from = 1800, to = 2015), sep = \"_\"))\ncolnames(dat_gdp) <- columnsgdp\ncolnames(dat_life) <- columnslife\ndat_life <- dat_life[,-1]\ndat <- data.frame(cbind(dat_gdp, dat_life))\ndat <- dat[complete.cases(dat),]\nm <- as.matrix(dat[2:217])\ndat <- melt(dat)\ndates <- seq(from = 1810, to = 2015, by = 20)\ndat$variable <- as.character(dat$variable)\nvariable <- do.call(rbind, strsplit(dat$variable, split =  \"_\"))[,1]\ndate <- do.call(rbind, strsplit(dat$variable, split =  \"_\"))[,2]\ndat$variable <- variable\ndat$date <- as.numeric(date)\ndat <- dcast(dat, state + date ~ variable)\nsetDT(dat)\nsetnames(dat, c(\"state\", \"year\", \"x\", \"y\"))\nsubset_hw_data <- function(date, dat)\n{\n  dta <- dat[year == date]\n  dta[, state := NULL]\n  dta[, year := NULL]\n}\nyears_data <- lapply(dates, subset_hw_data, dat = dat)\nanalysis_dat <- years_data[[11]]\n\nget_time_series_aocs <- function(DAT)\n{\n  analysis_dat <- DAT\n  AH_AOC(dat = analysis_dat, method = c(\"QR\"), input = analysis_dat$x,\n    output = analysis_dat$y, print_style = \"R\", CI = TRUE, nboots = 5000)\n}\n\nts_aoc_hw <- lapply(years_data, get_time_series_aocs)\nts_aoc_hw_table <- do.call(rbind, ts_aoc_hw)\nts_aoc_hw_table[,1] <- dates\ncolnames(ts_aoc_hw_table) <- c(\"year\", \"AOC\", \"2.5%\", \"50%\", \"97.5%\")\nts_aoc_hw_table <- apply(ts_aoc_hw_table, 2, as.numeric)\nxtable(ts_aoc_hw_table)\n\n# let's get AOC over time\nall_years <- seq(1800, 2010, 1)\nall_years_data <- lapply(all_years, subset_hw_data, dat = dat)\nall_years_aoc <- lapply(all_years_data, get_time_series_aocs)\naoc_data_all_years <- do.call(rbind, all_years_aoc)\naoc_data_all_years$year <- all_years\naoc_data_all_years$AOC <- as.numeric(aoc_data_all_years$AOC)\naoc_data_all_years$year <- as.numeric(aoc_data_all_years$year)\naoc_data_all_years$above_2 <- ifelse(aoc_data_all_years$AOC >= 0.2, 1, 0)\naoc_data_all_years$pre1950 <- ifelse(aoc_data_all_years$year < 1950, 1, 0)\nsetDT(aoc_data_all_years)\naoc_data_all_years[, sum(above_2)/184]\naoc_data_all_years[, mean(AOC), by = pre1950]\nprop_table <- t(aoc_data_all_years[, sum(above_2)/184, by = pre1950])\nprop_table[1,] <- c(\"Before 1950\", \"After 1950\")\nxtable(prop_table)\nggplot(aoc_data_all_years, aes(x = year, y = AOC)) + geom_point() +\n  geom_smooth() + theme_bw() + geom_hline(yintercept = 0.2) +\n  ggtitle(\"How Asymmetric is Health and Wealth from 1800 to 2010?\")\n",
+    "created" : 1483812868079.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2548828390",
+    "id" : "8A1F23A4",
+    "lastKnownWriteTime" : 1483812979,
+    "last_content_update" : 1483812979786,
+    "path" : "~/uah/draft/fig4:5_table5.R",
+    "project_path" : "draft/fig4:5_table5.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

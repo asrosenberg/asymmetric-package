@@ -1,9 +1,9 @@
-boundary_routine <- function(dat, input, output, method)
+boundary_routine <- function(dat, input = input, output = output, method)
 {
   dat$x <- input
   dat$y <- output
   id <- order(dat$x)
-  divide_by_this <- (max(dat$x - min(dat$x))) * (max(dat$y) - min(dat$y))
+  divide_by_this <- (max(dat$x) - min(dat$x)) * (max(dat$y) - min(dat$y))
   ymin <- min(dat$y)
   idx <- sample(1:nrow(dat), nrow(dat), replace=TRUE)
   sample.dta <- dat[idx,]
@@ -41,10 +41,10 @@ boundary_routine <- function(dat, input, output, method)
   }
   if(method == "QR")
   {
-    ka_qr <- rq(y ~ x, tau = 0.95, data = sample.dta)
-    y_qr <- ka_qr$coefficients[1] + ka_qr$coefficients[2] * x
-    AUC_qr <- sum(diff(sort(dat$x)) * rollmean(sort(y_qr), 2))
-    AUC_lower <- sum(diff(dat$x[id]) * ymin)
+    ka_qr <- rq(output ~ input, tau = 0.95, data = sample.dta)
+    y_qr <- ka_qr$coefficients[1] + ka_qr$coefficients[2] * input
+    AUC_qr <- sum(diff(sort(input)) * rollmean(sort(y_qr), 2))
+    AUC_lower <- sum(diff(input[id]) * ymin)
     AUC_difference <- AUC_qr - AUC_lower
     AUC_percent <- AUC_difference/divide_by_this
     result <- 1 - AUC_percent
@@ -55,14 +55,16 @@ boundary_routine <- function(dat, input, output, method)
 AH_AOC <- function(dat, input, output, method, print_style = "ascii",
   CI = FALSE, nboots)
 {
-  AOC_estimates <- lapply(method, which_technique_to_use, dat = dat)
+  AOC_estimates <- lapply(method, which_technique_to_use, dat = dat,
+    input = input, output = output)
   estimates <- round(do.call(rbind, AOC_estimates), digits = 3)
   rownames(estimates) <- method
   colnames(estimates) <- "AOC"
 
   if(CI == TRUE)
   {
-    samples <- lapply(method, replicates, nboots = nboots, dat = dat)
+    samples <- lapply(method, replicates, nboots = nboots, dat = dat,
+      input = input, output = output)
     CIs <- lapply(samples, quantile, probs = c(0.025, 0.5, 0.975))
     CIs <- round(do.call(rbind, CIs), digits = 3)
     CI_estimates <- cbind(estimates, CIs)
@@ -84,7 +86,7 @@ AH_AOC <- function(dat, input, output, method, print_style = "ascii",
   }
 }
 
-which_technique_to_use <- function(method, dat, input, output)
+which_technique_to_use <- function(method, dat, input = input, output = output)
 {
   id <- order(input)
   divide_by_this <- (max(input) - min(input)) * (max(output) - min(output))
@@ -134,9 +136,10 @@ which_technique_to_use <- function(method, dat, input, output)
   }
 }
 
-replicates <- function(method, nboots, dat)
+replicates <- function(method, nboots, dat, input, output)
 {
-  samples <- replicate(nboots, boundary_routine(dat, method = method))
+  samples <- replicate(nboots, boundary_routine(dat, method = method,
+    input = input, output = output))
 }
 
 
