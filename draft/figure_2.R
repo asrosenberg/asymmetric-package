@@ -1,5 +1,4 @@
 library(uah)
-options(stringsAsFactors = FALSE)
 
 colors <- brewer.pal(7, "Set1")
 
@@ -16,31 +15,25 @@ ols_fake <- lm(y ~ x)
 bw <- kern_smooth_bw(x, y, method="u", technique="noh", bw_method="bic")
 kernsmooth <- kernel_smoothing(x, y, y, h = bw)
 par(mar=c(4,3,3,0), pty = "s")
-plot(x, y,
-     main = "Comparison of Each Technique on Simulated Asymmetric Data",
-     xlim = c(0,1),
-     xlab = "",
-     ylab = "",
-     ylim = c(0,1), type = "p", pch = 19, col="gray",
-     xaxp = c(0, 1, 1), yaxp = c(0, 1, 1), cex.lab = 0.8, cex.axis = 0.8,
-     cex = 1.5)
+plot(x, y, main = "Comparison of Each Technique on Simulated Asymmetric Data",
+  xlim = c(0,1), xlab = "", ylab = "", ylim = c(0,1), type = "p", pch = 19,
+  col="gray", xaxp = c(0, 1, 1), yaxp = c(0, 1, 1), cex.lab = 0.8,
+  cex.axis = 0.8, cex = 1.5)
 abline(a = qr_fake$coefficients[1] , b = qr_fake$coefficients[2], col = colors[4],
-       lty = "dotted", lwd = 2)
+  lty = "dotted", lwd = 2)
 abline(a = sfa_fake$mleParam[1], b = sfa_fake$mleParam[2], col = colors[5],
-       lty = "dotdash", lwd = 2)
+  lty = "dotdash", lwd = 2)
 points(x = sort(x), y = sort(kernsmooth), type = "l", lwd = 2,
-       col = colors[1], lty = "twodash")
+  col = colors[1], lty = "twodash")
 abline(a = ols_fake$coefficients[1], b = ols_fake$coefficients[2], col = colors[7],
-       lty = 1, lwd = 2)
+  lty = 1, lwd = 2)
 legend.txt <- c("Kernel", "QR (.95)", "SFA", "OLS")
 legend('topleft', legend.txt,
-       lty=c("twodash", "dotted", "dotdash", "solid"),
-       col=c(colors[1], colors[4],colors[5], colors[7]),
-       bty='n', cex=.75, lwd = 2)
+  lty=c("twodash", "dotted", "dotdash", "solid"),
+  col=c(colors[1], colors[4],colors[5], colors[7]),
+  bty='n', cex=.75, lwd = 2)
 
-# AOC on fake data
+# AOC on simulated data (Table 2)
 AOC_fd <- AH_AOC(dat = analysis_dat, method = c("Kernel", "QR", "SFA"),
-       print_style = "R", CI = TRUE, nboots = 1000)
+  print_style = "R", CI = TRUE, nboots = 5000)
 toLatex(AOC_fd)
-AH_AOC(dat = analysis_dat, method = c("Kernel", "QR", "SFA"),
-print_style = "R", CI = FALSE, nboots = 1000)
