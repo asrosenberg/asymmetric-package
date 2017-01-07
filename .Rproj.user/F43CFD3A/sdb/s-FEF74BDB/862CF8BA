@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "# ' Load dataset from inst/extdata\n#'\n#' Loads a dataset from inst/extdata into memory.\n#' @param dataset the name of the dataset to load\n#' @return data set\n#' @import data.table\n#' @export\nload_dataset <- function(dataset)\n{\n  file_name <- system.file(\"extdata\", paste0(dataset,\".csv\"),\n    package = \"uah\")\n  DATA <- read.csv(file_name)\n}\n\n",
+    "created" : 1483797871519.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "200540567",
+    "id" : "862CF8BA",
+    "lastKnownWriteTime" : 1483797895,
+    "last_content_update" : 1483797895878,
+    "path" : "~/uah/R/load_data.R",
+    "project_path" : "R/load_data.R",
+    "properties" : {
+    },
+    "relative_order" : 10,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
