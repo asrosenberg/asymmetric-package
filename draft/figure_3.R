@@ -1,5 +1,5 @@
 library(uah)
-
+dat <- load_dataset("KA_data")
 countryname <- dat$X
 y <- dat$Supranationalist.government
 x <- dat$Strong.regional.governance * dat$High.policy.conformity

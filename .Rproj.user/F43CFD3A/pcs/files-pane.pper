@@ -1,0 +1,9 @@
+{
+    "path" : "~/uah/inst/extdata",
+    "sortOrder" : [
+        {
+            "ascending" : true,
+            "columnIndex" : 2
+        }
+    ]
+}
