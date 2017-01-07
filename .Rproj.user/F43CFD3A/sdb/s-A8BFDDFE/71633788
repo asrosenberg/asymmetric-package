@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "library(uah)\n\ncolors <- brewer.pal(7, \"Set1\")\n\n# Make fake asymmetric data\nx <- runif(75, min = 0, max = 1)\ny <- 1/2*x^(1/2)*runif(75, min = 0, max = 2)\nanalysis_dat <- data.frame(x = x, y = y)\nplot(x, y)\n\n# QR, SFA, poly\nqr_fake <- rq(y ~ x, tau = 0.95)\nsfa_fake <- sfa(y ~ x | x, ineffDecrease = TRUE)\nols_fake <- lm(y ~ x)\nbw <- kern_smooth_bw(x, y, method=\"u\", technique=\"noh\", bw_method=\"bic\")\nkernsmooth <- kernel_smoothing(x, y, y, h = bw)\npar(mar=c(4,3,3,0), pty = \"s\")\nplot(x, y, main = \"Comparison of Each Technique on Simulated Asymmetric Data\",\n  xlim = c(0,1), xlab = \"\", ylab = \"\", ylim = c(0,1), type = \"p\", pch = 19,\n  col=\"gray\", xaxp = c(0, 1, 1), yaxp = c(0, 1, 1), cex.lab = 0.8,\n  cex.axis = 0.8, cex = 1.5)\nabline(a = qr_fake$coefficients[1] , b = qr_fake$coefficients[2], col = colors[4],\n  lty = \"dotted\", lwd = 2)\nabline(a = sfa_fake$mleParam[1], b = sfa_fake$mleParam[2], col = colors[5],\n  lty = \"dotdash\", lwd = 2)\npoints(x = sort(x), y = sort(kernsmooth), type = \"l\", lwd = 2,\n  col = colors[1], lty = \"twodash\")\nabline(a = ols_fake$coefficients[1], b = ols_fake$coefficients[2], col = colors[7],\n  lty = 1, lwd = 2)\nlegend.txt <- c(\"Kernel\", \"QR (.95)\", \"SFA\", \"OLS\")\nlegend('topleft', legend.txt,\n  lty=c(\"twodash\", \"dotted\", \"dotdash\", \"solid\"),\n  col=c(colors[1], colors[4],colors[5], colors[7]),\n  bty='n', cex=.75, lwd = 2)\n\n# AOC on simulated data (Table 2)\nAOC_fd <- AH_AOC(dat = analysis_dat, input = analysis_dat$x,\n  output = analysis_dat$y, method = c(\"Kernel\", \"QR\", \"SFA\"), print_style = \"R\",\n  CI = TRUE, nboots = 5000)\ntoLatex(AOC_fd)\n",
+    "created" : 1483808521088.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1537052015",
+    "id" : "71633788",
+    "lastKnownWriteTime" : 1483808552,
+    "last_content_update" : 1483808552896,
+    "path" : "~/uah/draft/figure_2.R",
+    "project_path" : "draft/figure_2.R",
+    "properties" : {
+    },
+    "relative_order" : 10,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

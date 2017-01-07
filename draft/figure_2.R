@@ -34,6 +34,7 @@ legend('topleft', legend.txt,
   bty='n', cex=.75, lwd = 2)
 
 # AOC on simulated data (Table 2)
-AOC_fd <- AH_AOC(dat = analysis_dat, method = c("Kernel", "QR", "SFA"),
-  print_style = "R", CI = TRUE, nboots = 5000)
+AOC_fd <- AH_AOC(dat = analysis_dat, input = analysis_dat$x,
+  output = analysis_dat$y, method = c("Kernel", "QR", "SFA"), print_style = "R",
+  CI = TRUE, nboots = 5000)
 toLatex(AOC_fd)

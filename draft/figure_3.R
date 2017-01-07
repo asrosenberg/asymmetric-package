@@ -46,6 +46,7 @@ legend('bottomright', legend.txt, lty=c("longdash","solid"),
        col=c(colors[1], colors[2]), bty='n', cex=.75, lwd = 2)
 
 # AOC for Koenig-Archibugi example (Table 3)
-KA_AOC <- AH_AOC(dat = analysis_dat, method = c("Kernel"),
-  print_style = "R", CI = TRUE, nboots = 5000)
+KA_AOC <- AH_AOC(dat = analysis_dat, input = analysis_dat$x,
+  output = analysis_dat$y, method = "Kernel", print_style = "R", CI = TRUE,
+  nboots = 5000)
 toLatex(KA_AOC)
