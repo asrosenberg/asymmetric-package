@@ -10,4 +10,4 @@ License: What license is it under?
 Encoding: UTF-8
 LazyData: true
 depends: R(>= 3.1), data.table, frontier, foreign, quantreg, npbr, countrycode,
-  RColorBrewer, parallel, Rglpk, zoo, pracma
+  RColorBrewer, parallel, Rglpk, zoo, pracma, plot3D
