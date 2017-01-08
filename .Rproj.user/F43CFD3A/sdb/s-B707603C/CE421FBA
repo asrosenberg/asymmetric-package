@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "library(devtools)\ndocument()\nbuild()\ninstall()\n\n",
+    "created" : 1483914715817.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3468690422",
+    "id" : "CE421FBA",
+    "lastKnownWriteTime" : 1483814832,
+    "last_content_update" : 1483814832,
+    "path" : "~/asymmetric-package/package/prep-package.R",
+    "project_path" : "package/prep-package.R",
+    "properties" : {
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

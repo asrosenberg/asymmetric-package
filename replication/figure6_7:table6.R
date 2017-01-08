@@ -1,4 +1,4 @@
-library(uah)
+library(asymmetric)
 options(stringsAsFactors = FALSE)
 colors <- brewer.pal(7, "Set1")
 load("inst/extdata/Coxappend.RData")
@@ -43,6 +43,10 @@ x$var12[47] <- "St. Vincent & Grenadines"
 x$var12[51] <- "United Kingdom"
 x$var12[52] <- "United States"
 
+##############
+# Figure 7
+##############
+
 dotchart(sort(resid), labels=sapply(tolower(x$var12[order(resid)]), simpleCap),
   cex=0.4, pch=19, lcolor="gray90", main="Party System Size 'Inefficiency'")
 abline(v=0)
@@ -76,7 +80,10 @@ AOC_SFA_3D <- function(x, y, fun)
     min(y)) * (max(cgg_function(x, y)) - min(cgg_function(x, y))))
   1 - AUC
 }
+
+#################
 # AOC for Table 6
+#################
 AOC_SFA_3D(x = x$eneth, y = x$lnml, fun = cgg_function)
 
 boot_CGG <- function(dat)
@@ -106,7 +113,7 @@ boot_CGG <- function(dat)
 }
 dat <- x
 rm(x)
-CGG_reps <- replicate(10, boot_CGG(dat = dat))
+CGG_reps <- replicate(10000, boot_CGG(dat = dat))
 quantile(CGG_reps, c(0.025, 0.975))
 
 
@@ -138,5 +145,7 @@ AUC <- (AUC_dif)/((max(x) - min(x)) * (max(y) -
 boots[i] <- 1 - AUC
 }
 
+#################
 # CIs for Table 6
+#################
 quantile(boots, c(0.025, 0.5, 0.975))

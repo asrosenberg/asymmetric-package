@@ -33,25 +33,30 @@ analysis_dat <- years_data[[11]]
 
 get_time_series_aocs <- function(DAT)
 {
-  analysis_dat <- DAT
-  AH_AOC(dat = analysis_dat, method = c("QR"), input = analysis_dat$x,
-    output = analysis_dat$y, print_style = "R", CI = TRUE, nboots = 5000)
+  #analysis_dat <- DAT
+  AH_AOC(dat = DAT, method = c("QR"), input = DAT$x,
+    output = DAT$y, print_style = "R", CI = TRUE, nboots = 5000)
 }
 
 ts_aoc_hw <- lapply(years_data, get_time_series_aocs)
 ts_aoc_hw_table <- do.call(rbind, ts_aoc_hw)
 ts_aoc_hw_table[,1] <- dates
+
+##############
+# Table 4
+##############
 colnames(ts_aoc_hw_table) <- c("year", "AOC", "2.5%", "50%", "97.5%")
 ts_aoc_hw_table <- apply(ts_aoc_hw_table, 2, as.numeric)
 xtable(ts_aoc_hw_table)
 
-# let's get AOC over time
+# Get AOC over time
 all_years <- seq(1800, 2010, 1)
 all_years_data <- lapply(all_years, subset_hw_data, dat = dat)
 all_years_aoc <- lapply(all_years_data, get_time_series_aocs)
 aoc_data_all_years <- do.call(rbind, all_years_aoc)
 aoc_data_all_years$year <- all_years
-aoc_data_all_years$AOC <- as.numeric(aoc_data_all_years$AOC)
+aoc_data_all_years$AOC <-
+  as.numeric(levels(aoc_data_all_years$AOC))[aoc_data_all_years$AOC]
 aoc_data_all_years$year <- as.numeric(aoc_data_all_years$year)
 aoc_data_all_years$above_2 <- ifelse(aoc_data_all_years$AOC >= 0.2, 1, 0)
 aoc_data_all_years$pre1950 <- ifelse(aoc_data_all_years$year < 1950, 1, 0)
@@ -59,8 +64,18 @@ setDT(aoc_data_all_years)
 aoc_data_all_years[, sum(above_2)/184]
 aoc_data_all_years[, mean(AOC), by = pre1950]
 prop_table <- t(aoc_data_all_years[, sum(above_2)/184, by = pre1950])
-prop_table[1,] <- c("Before 1950", "After 1950")
-xtable(prop_table)
+prop_table <- rbind(prop_table, t(aoc_data_all_years[, mean(AOC), by = pre1950])[2,])
+prop_table <- prop_table[-1,]
+colnames(prop_table) <- c("Before 1950", "After 1950")
+
+##########
+# Table 5
+##########
+toLatex(prop_table, digits = 3)
+
+##########
+# Figure 4
+##########
 ggplot(aoc_data_all_years, aes(x = year, y = AOC)) + geom_point() +
   geom_smooth() + theme_bw() + geom_hline(yintercept = 0.2) +
   ggtitle("How Asymmetric is Health and Wealth from 1800 to 2010?")
