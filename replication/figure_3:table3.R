@@ -1,4 +1,6 @@
 library(asymmetric)
+library(countrycode)
+library(RColorBrewer)
 dat <- load_dataset("KA_data")
 countryname <- dat$X
 y <- dat$Supranationalist.government

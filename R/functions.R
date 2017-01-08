@@ -52,6 +52,17 @@ boundary_routine <- function(dat, input = input, output = output, method)
   result
 }
 
+#' Calculate Area Outside the Curve
+#'
+#' @param dat A Dataset
+#' @param input Independent variable
+#' @param output Dependent variable
+#' @param method What boundary method should be used?
+#' @param print_style "ascii" or "r"?
+#' @param CI Should confidence intervals be returned?
+#' @param nboots Number of bootstraps to generate the confidence intervals
+#' @import data.table
+#' @export
 AH_AOC <- function(dat, input, output, method, print_style = "ascii",
   CI = FALSE, nboots)
 {

@@ -1,4 +1,8 @@
 library(asymmetric)
+library(RColorBrewer)
+library(zoo)
+library(pracma)
+library(plot3D)
 options(stringsAsFactors = FALSE)
 colors <- brewer.pal(7, "Set1")
 load("inst/extdata/Coxappend.RData")

@@ -1,4 +1,5 @@
 library(asymmetric)
+library(data.table)
 dat_gdp <- load_dataset("gdp_ppp")
 dat_life <- load_dataset("life_expect")
 # log GDP

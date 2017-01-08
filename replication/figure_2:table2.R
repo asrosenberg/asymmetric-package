@@ -1,5 +1,5 @@
 library(asymmetric)
-
+library(RColorBrewer)
 colors <- brewer.pal(7, "Set1")
 
 # Make fake asymmetric data

@@ -8,6 +8,5 @@ Description: Test
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
-depends: R(>= 3.1), ggplot2, data.table, frontier, foreign, quantreg, npbr, 
-    countrycode, RColorBrewer, parallel, Rglpk, zoo, pracma, plot3D, memisc, xtable
+depends: R(>= 3.1), ggplot2, frontier, quantreg, npbr, Rglpk
 RoxygenNote: 5.0.1
