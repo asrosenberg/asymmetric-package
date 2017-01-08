@@ -11,7 +11,7 @@ bw <- kern_smooth_bw(analysis_dat$x, analysis_dat$y, method="u",
 kernsmooth <- kernel_smoothing(analysis_dat$x, analysis_dat$y, analysis_dat$x,
   h = bw)
 
-nboots <- 10
+nboots <- 10000
 
 bs.est <- replicate(nboots, bs.routine(dta = analysis_dat))
 ymatrix <- apply(bs.est, 2, sort)
@@ -48,5 +48,5 @@ legend('bottomright', legend.txt, lty=c("longdash","solid"),
 # AOC for Koenig-Archibugi example (Table 3)
 KA_AOC <- AH_AOC(dat = analysis_dat, input = analysis_dat$x,
   output = analysis_dat$y, method = "Kernel", print_style = "R", CI = TRUE,
-  nboots = 5)
+  nboots = 5000)
 toLatex(KA_AOC)
