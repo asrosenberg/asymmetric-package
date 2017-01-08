@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "library(asymmetric)\nlibrary(data.table)\n# Do QR on HW\ndat_gdp <- load_dataset(\"gdp_ppp\")\ndat_life <- load_dataset(\"life_expect\")\n# log GDP\ndat_gdp[, 2:217] <- log(dat_gdp[, 2:217])\ncolumnsgdp <- c(\"state\", paste(\"gdp\",seq(from = 1800, to = 2015), sep = \"_\"))\ncolumnslife <- c(\"state\", paste(\"life\",seq(from = 1800, to = 2015), sep = \"_\"))\ncolnames(dat_gdp) <- columnsgdp\ncolnames(dat_life) <- columnslife\ndat_life <- dat_life[,-1]\ndat <- data.frame(cbind(dat_gdp, dat_life))\ndat <- dat[complete.cases(dat),]\ngdps <- dat[2:217]\ndat <- melt(dat)\ndat$variable <- as.character(dat$variable)\nvariable <- do.call(rbind, strsplit(dat$variable, split =  \"_\"))[,1]\ndate <- do.call(rbind, strsplit(dat$variable, split =  \"_\"))[,2]\ndat$variable <- variable\ndat$date <- as.numeric(date)\ndat <- dcast(dat, state + date ~ variable)\nsetDT(dat)\nsetnames(dat, c(\"state\", \"year\", \"gdp\", \"life\"))\n\n\nqr_funct <- function(date, DT) {\n  sub_dat <- DT[year == date]\n  qr <- rq(life ~ gdp, tau = 0.95, data = sub_dat)\n  qr$fitted\n}\nget_gdps <- function(date)\n{\n  sub_dat <- dat[year == date]\n  sub_dat$gdp\n}\ndates <- seq(from = 1810, to = 2015, by = 20)\nyrs20 <- seq(1, 215, by = 20)\ngdps <- as.data.table(sapply(dates, get_gdps))\nresults <- as.data.table(sapply(dates, qr_funct, DT = dat))\nsetnames(gdps, as.character(yrs20))\nsetnames(results, as.character(yrs20))\ngdps[[\"1810\"]]\npoints(gdps[[\"1810\"]], results[[\"1810\"]])\n\n# Get Bootstraps for every 20 years\nqr_20_years_bootstrap <- function(dat, date, nboots)\n{\n  boots <- function(dat, date){\n    dta <- dat[year == date]\n    idx <- sample(1:nrow(dta), nrow(dta), replace=TRUE)\n    sample.dta <- dta[idx,]\n    qr <- rq(life ~ gdp, tau = 0.95, data = sample.dta)\n    qr$coefficients[1] + dta[, gdp] * qr$coefficients[2]\n  }\n  reps <- apply(replicate(nboots, boots(dat, date)), 2, sort)\n  quantiles <- apply(reps, 1, quantile, probs = c(0.025, 0.975))\n  quantiles\n}\n\ndates <- seq(from = 1810, to = 2010, by = 20)\nbootstraps <- lapply(dates, qr_20_years_bootstrap, dat = dat, nboots = 5000)\nnames(bootstraps) <- seq(1, 215, by = 20)\n\n# Make Figure 5\nyrs20 <- seq(1, 215, by = 20)\npar(mar=c(2,2,0,0))\npar(mfrow=c(2,6), oma = c(0, 0, 2, 0))\nfor(i in seq(from = 1, to = 215, by = 20)){\n  plot(0, xlim=c(5,12), ylim=c(15,90), type = \"n\", xlab = \" \", ylab = \" \",\n    main = \" \", axes=FALSE)\n  axis(2, labels=FALSE, col=\"#88888888\")\n  if(i==1 | i==121){axis(2, labels=TRUE, col=\"#88888888\", col.axis=\"#88888888\")}\n  if(i>120){axis(1, labels=c(\"150\",\"1,500\",\"15,000\",\"150,000\"),\n    at=c(5.01,7.31,9.61,11.91), col=\"#88888888\", col.axis=\"#88888888\")}\n  points(dat[year == 1799 + i, gdp], dat[year == 1799 + i, life], pch=\".\",\n    col=\"#88888888\", cex = 2)\n  points(eval(parse(text = paste0(\"gdps[['\", i, \"']]\"))),\n    eval(parse(text = paste0(\"results[['\", i, \"']]\"))), type = \"l\",\n    col = \"black\", lwd = 1)\n  ylow <- eval(parse(text = paste0(\"bootstraps$`\", i, \"`\")))[1,]\n  yhigh <- eval(parse(text = paste0(\"bootstraps$`\", i, \"`\")))[2,]\n  polygon(x = c(sort(eval(parse(text = paste0(\"gdps[['\", i, \"']]\")))),\n    rev(sort(eval(parse(text = paste0(\"gdps[['\", i, \"']]\")))))), c(sort(ylow),\n    rev(sort(yhigh))), col = alpha(\"grey30\", 0.25), border = NA)\n  text(6,75, as.character(1809 + i))\n}\nmtext(\"Life Expectancy vs. GDP Across Generations\", outer = TRUE, cex = 1.5)\n",
+    "created" : 1483918902617.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3392215149",
+    "id" : "98F9B1CE",
+    "lastKnownWriteTime" : 1483918926,
+    "last_content_update" : 1483918926998,
+    "path" : "~/asymmetric-package/replication/Figure_5.R",
+    "project_path" : "replication/Figure_5.R",
+    "properties" : {
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
