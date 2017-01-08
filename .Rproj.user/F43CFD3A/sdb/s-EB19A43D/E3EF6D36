@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "library(asymmetric)\ndat <- load_dataset(\"KA_data\")\ncountryname <- dat$X\ny <- dat$Supranationalist.government\nx <- dat$Strong.regional.governance * dat$High.policy.conformity\ny <- 1 - y\nx <- 1 - x\nanalysis_dat <- data.frame(x, y, countryname)\nbw <- kern_smooth_bw(analysis_dat$x, analysis_dat$y, method=\"u\",\n  technique=\"noh\", bw_method=\"bic\")\nkernsmooth <- kernel_smoothing(analysis_dat$x, analysis_dat$y, analysis_dat$x,\n  h = bw)\n\nnboots <- 10\n\nbs.est <- replicate(nboots, bs.routine(dta = analysis_dat))\nymatrix <- apply(bs.est, 2, sort)\n\ninterval_lines_y <- apply(ymatrix, 1, quantile, probs = c(0.1, 0.9))\nmean_y <- apply(ymatrix, 1, quantile, probs = 0.5)\n\nxs <- with(dat, Strong.regional.governance*High.policy.conformity)\ndat$abbrv <- countrycode(as.character(dat$X), \"country.name\", \"iso3c\")\npar(mar=c(4,3,3,0), pty = \"s\")\nset.seed(2)\nplot(dat$Strong.regional.governance * dat$High.policy.conformity,\n  dat$Supranationalist.government,\n  main = \"Kernel Boundary Estimate for Koenig-Archibugi (2004)\",\n  xlim = c(0,1), xlab = \"\", ylab = \"\", ylim = c(0,1), type = \"p\", pch = 19,\n  col=\"#00000055\", xaxp = c(0, 1, 1), yaxp = c(0, 1, 1), cex.lab = 0.8,\n  cex.axis = 0.8, cex = 1.5)\nwith(dat, text(jitter(Supranationalist.government, factor = 1) ~ xs,\n  labels = dat$abbrv, pos = 3, cex = 0.75))\nmtext(\"Support for Supranational CFSP\", side=2, line=1)\nmtext(\"Combination of Regional Governance and Policy Conformity\",\n  side=1, line=1)\npolygon(x = c(sort(1 - analysis_dat$x), rev(sort(1 - analysis_dat$x))),\n  c(sort(interval_lines_y[1, ]), rev(sort(interval_lines_y[2, ]))),\n  col = \"grey87\", border = NA)\npoints(x = sort(1 - analysis_dat$x), y = sort(1 - kernsmooth), type = \"l\",\n  lwd = 2, col = colors[1], lty = \"longdash\")\npoints(x = sort(1 - analysis_dat$x), y = sort(mean_y), type = \"l\",\n  lwd = 2, col = colors[2], lty = \"solid\")\nlegend.txt <- c(\"Kernel\", \"Kernel Boot (0.5)\")\nlegend('bottomright', legend.txt, lty=c(\"longdash\",\"solid\"),\n       col=c(colors[1], colors[2]), bty='n', cex=.75, lwd = 2)\n\n# AOC for Koenig-Archibugi example (Table 3)\nKA_AOC <- AH_AOC(dat = analysis_dat, input = analysis_dat$x,\n  output = analysis_dat$y, method = \"Kernel\", print_style = \"R\", CI = TRUE,\n  nboots = 5)\ntoLatex(KA_AOC)\n",
+    "created" : 1483814971778.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2673721435",
+    "id" : "E3EF6D36",
+    "lastKnownWriteTime" : 1483914190,
+    "last_content_update" : 1483914190935,
+    "path" : "~/asymmetric-package/replication/figure_3:table3.R",
+    "project_path" : "replication/figure_3:table3.R",
+    "properties" : {
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

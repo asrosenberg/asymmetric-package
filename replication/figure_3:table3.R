@@ -1,4 +1,4 @@
-library(uah)
+library(asymmetric)
 dat <- load_dataset("KA_data")
 countryname <- dat$X
 y <- dat$Supranationalist.government
@@ -11,7 +11,7 @@ bw <- kern_smooth_bw(analysis_dat$x, analysis_dat$y, method="u",
 kernsmooth <- kernel_smoothing(analysis_dat$x, analysis_dat$y, analysis_dat$x,
   h = bw)
 
-nboots <- 10000
+nboots <- 10
 
 bs.est <- replicate(nboots, bs.routine(dta = analysis_dat))
 ymatrix <- apply(bs.est, 2, sort)
@@ -36,7 +36,7 @@ mtext("Combination of Regional Governance and Policy Conformity",
   side=1, line=1)
 polygon(x = c(sort(1 - analysis_dat$x), rev(sort(1 - analysis_dat$x))),
   c(sort(interval_lines_y[1, ]), rev(sort(interval_lines_y[2, ]))),
-  col = alpha("grey30", 0.25), border = NA)
+  col = "grey87", border = NA)
 points(x = sort(1 - analysis_dat$x), y = sort(1 - kernsmooth), type = "l",
   lwd = 2, col = colors[1], lty = "longdash")
 points(x = sort(1 - analysis_dat$x), y = sort(mean_y), type = "l",
@@ -48,5 +48,5 @@ legend('bottomright', legend.txt, lty=c("longdash","solid"),
 # AOC for Koenig-Archibugi example (Table 3)
 KA_AOC <- AH_AOC(dat = analysis_dat, input = analysis_dat$x,
   output = analysis_dat$y, method = "Kernel", print_style = "R", CI = TRUE,
-  nboots = 5000)
+  nboots = 5)
 toLatex(KA_AOC)
