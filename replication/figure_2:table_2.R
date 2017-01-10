@@ -1,5 +1,6 @@
 library(asymmetric)
 library(RColorBrewer)
+library(memisc)
 colors <- brewer.pal(7, "Set1")
 
 # Make fake asymmetric data
