@@ -34,8 +34,12 @@ points(x = sort(sufx), y = sort(1 - test), type = "l")
 
 plot(sufx, sufy)
 test <- estimate_boundary(suf_Dat, input = sufx,
-  output = sufy, method = "Polynomial", AOC = FALSE, sufficient = TRUE)
+  output = sufy, method = "Polynomial", sufficient = TRUE)
 points(x = sort(sufx), y = sort(test), type = "l")
+
+estimate_boundary(suf_Dat, input = sufx,
+  output = sufy, method = "Polynomial", sufficient = TRUE, AOC = TRUE)
+
 
 
 

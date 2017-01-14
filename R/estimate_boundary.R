@@ -1,12 +1,11 @@
-#' Calculate Area Outside the Curve
+#' Estimate Boundary of Asymmetric Hypothesis
 #'
 #' @param dat A Dataset
 #' @param input Independent variable
 #' @param output Dependent variable
-#' @param method What boundary method should be used?
-#' @param print_style "ascii" or "r"?
-#' @param CI Should confidence intervals be returned?
-#' @param nboots Number of bootstraps to generate the confidence intervals
+#' @param method What boundary technique? One of: SFA, QR, Polynomial, Kernel.
+#' @param AOC Should AOC be returned? Default is FALSE.
+#' @param sufficient Is the data sufficient? Default is FALSE.
 #' @import data.table
 #' @import quantreg
 #' @import frontier
@@ -89,11 +88,19 @@ estimate_boundary <- function(dat, input, output, sufficient = FALSE,
   }
   if(AOC == TRUE)
   {
-    AOC <- sum(diff(sort(x)) * rollmean(sort(boundary), 2))
-    AOC_lower <- sum(diff(dat$x[id]) * ymin)
+    id <- order(dat$x)
+    divide_by_this <- (max(dat$x) - min(dat$x)) * (max(dat$y) - min(dat$y))
+    AOC <- sum(diff(sort(dat$x)) * rollmean(sort(boundary), 2))
+    AOC_lower <- sum(diff(dat$x[id]) * min(dat$y))
     AOC_difference <- AOC - AOC_lower
     AOC_percent <- AOC_difference/divide_by_this
     AOC_result <- 1 - AOC_percent
+    results_list <- list(boundary, AOC_result)
+    names(results_list) <- c("boundary", "AOC")
+    return(results_list)
   }
-  return(boundary)
+  if(AOC == FALSE)
+  {
+    return(boundary)
+  }
 }
