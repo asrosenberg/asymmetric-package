@@ -31,3 +31,12 @@ test <- estimate_boundary(suf_Dat, input = 1 - sufx,
 points(x = sort(sufx), y = sort(1 - test), type = "l")
 # need to flip both x and y
 # then return 1 - boundary
+
+plot(sufx, sufy)
+test <- estimate_boundary(suf_Dat, input = sufx,
+  output = sufy, method = "Polynomial", AOC = FALSE, sufficient = TRUE)
+points(x = sort(sufx), y = sort(test), type = "l")
+
+
+
+
