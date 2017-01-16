@@ -5,7 +5,7 @@ Version: 0.1.0
 Author: Andrew S. Rosenberg, Austin J. Knuppe, Bear F. Braumoeller
 Maintainer: Andrew S. Rosenberg <rosenberg.1108@osu.edu>
 Description: Test
-License: What license is it under?
+#License: What license is it under?
 Encoding: UTF-8
 LazyData: true
 depends: R(>= 3.1), ggplot2, frontier, quantreg, npbr, Rglpk

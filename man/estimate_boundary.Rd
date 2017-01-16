@@ -21,6 +21,10 @@ estimate_boundary(dat, input, output, sufficient = FALSE, method,
 \item{AOC}{Should AOC be returned? Default is FALSE.}
 }
 \description{
-Estimate Boundary of Asymmetric Hypothesis
+This function uses a variety of techniques to estimate data boundaries for asymmetric hypotheses.
+}
+\examples{
+DATA <- read.csv("dat.csv")
+estimate_boundary(dat = DATA, input = DATA$x, output = DATA$y, sufficient = FALSE, merthod = "QR", AOC = FALSE)
 }
 

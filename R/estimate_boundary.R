@@ -1,5 +1,7 @@
 #' Estimate Boundary of Asymmetric Hypothesis
 #'
+#' This function uses a variety of techniques to estimate data boundaries for asymmetric hypotheses.
+#'
 #' @param dat A Dataset
 #' @param input Independent variable
 #' @param output Dependent variable
@@ -10,7 +12,11 @@
 #' @import quantreg
 #' @import frontier
 #' @import npbr
+#' @examples
+#' DATA <- read.csv("dat.csv")
+#' estimate_boundary(dat = DATA, input = DATA$x, output = DATA$y, sufficient = FALSE, merthod = "QR", AOC = FALSE)
 #' @export
+#'
 estimate_boundary <- function(dat, input, output, sufficient = FALSE,
   method, AOC = FALSE)
 {
