@@ -62,18 +62,16 @@ estimate_boundary <- function(dat, input, output, sufficient = FALSE,
     {
       dat$x <- 1 - dat$x
       dat$y <- 1 - dat$y
-      options(warn = -1)
-      ka_sfa <- sfa(dat$y ~ dat$x | dat$x, ineffDecrease = TRUE, data = dat)
+      ka_sfa <- suppressWarnings(sfa(dat$y ~ dat$x | dat$x, 
+        ineffDecrease = TRUE, data = dat))
       flip_boundary <- ka_sfa$mleParam[1] + ka_sfa$mleParam[2] * dat$x
       boundary <- 1 - flip_boundary
-      options(warn = 0)
     }
     if(sufficient == FALSE)
     {
-      options(warn = -1)
-      ka_sfa <- sfa(dat$y ~ dat$x | dat$x, ineffDecrease = TRUE, data = dat)
+      ka_sfa <- suppressWarnings(sfa(dat$y ~ dat$x | dat$x, 
+        ineffDecrease = TRUE, data = dat))
       boundary <- ka_sfa$mleParam[1] + ka_sfa$mleParam[2] * input
-      options(warn = 0)
     }
   }
   if(method == "QR")
