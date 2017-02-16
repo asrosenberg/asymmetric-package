@@ -31,7 +31,7 @@ boundary_routine <- function(dat, input = input, output = output, method)
   }
   if(method == "SFA")
   {
-    ka_sfa <- sfa(y ~ x | x, ineffDecrease = TRUE, data = sample.dta)
+    ka_sfa <- suppressWarnings(sfa(y ~ x | x, ineffDecrease = TRUE, data = sample.dta))
     y_sfa <- ka_sfa$mleParam[1] + ka_sfa$mleParam[2] * x
     AUC_sfa <- sum(diff(sort(dat$x)) * rollmean(sort(y_sfa), 2))
     AUC_lower <- sum(diff(dat$x[id]) * ymin)
@@ -41,10 +41,10 @@ boundary_routine <- function(dat, input = input, output = output, method)
   }
   if(method == "QR")
   {
-    ka_qr <- rq(output ~ input, tau = 0.95, data = sample.dta)
+    ka_qr <- rq(y ~ x, tau = 0.95, data = sample.dta)
     y_qr <- ka_qr$coefficients[1] + ka_qr$coefficients[2] * input
-    AUC_qr <- sum(diff(sort(input)) * rollmean(sort(y_qr), 2))
-    AUC_lower <- sum(diff(input[id]) * ymin)
+    AUC_qr <- sum(diff(sort(sample.dta$x)) * rollmean(sort(y_qr), 2))
+    AUC_lower <- sum(diff(sort(sample.dta$x)) * ymin)
     AUC_difference <- AUC_qr - AUC_lower
     AUC_percent <- AUC_difference/divide_by_this
     result <- 1 - AUC_percent
@@ -68,7 +68,7 @@ which_technique_to_use <- function(method, dat, input = input, output = output)
     return(qr_result)
   }
   if(method == "SFA"){
-    ka_sfa <- sfa(output ~ input | input, ineffDecrease = TRUE, data = dat)
+    ka_sfa <- suppressWarnings(sfa(output ~ input | input, ineffDecrease = TRUE, data = dat))
     y_sfa <- ka_sfa$mleParam[1] + ka_sfa$mleParam[2] * input
     AUC_sfa <- sum(diff(input[id]) * rollmean(sort(y_sfa), 2))
     AUC_lower <- sum(diff(input[id]) * ymin)
@@ -220,10 +220,6 @@ bs.routine <- function(dta)
   x <- sample.dta$x
   odeg <- opt_degree(x, y, analysis_dat$x, prange=0:20)
   polfront <- poly_estimate(x, y, analysis_dat$x, deg = odeg)
-  #ys <- 1 - polfront
-  #xs <- 1 - x
-  #list(cbind(xs, ys))
-  #list(cbind(1 - x, 1 - polfront))
   c(1 - polfront)
 }
 
