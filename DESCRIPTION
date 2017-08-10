@@ -8,5 +8,5 @@ Description: Test
 #License: What license is it under?
 Encoding: UTF-8
 LazyData: true
-depends: R(>= 3.1), ggplot2, frontier, quantreg, npbr, Rglpk
+Depends: R(>= 3.1), ggplot2, frontier, quantreg, npbr, Rglpk
 RoxygenNote: 5.0.1
