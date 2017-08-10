@@ -13,8 +13,10 @@
 #' @import frontier
 #' @import npbr
 #' @examples
-#' DATA <- read.csv("dat.csv")
-#' estimate_boundary(dat = DATA, input = DATA$x, output = DATA$y, sufficient = FALSE, merthod = "QR", AOC = FALSE)
+#' DATA <- load_dataset("KA_data")
+#' DATA$y <- DATA$Supranationalist.government
+#' DATA$x <- DATA$Strong.regional.governance * DATA$High.policy.conformity
+#' estimate_boundary(dat = DATA, input = DATA$x, output = DATA$y, sufficient = TRUE, method = "QR", AOC = FALSE)
 #' @export
 #'
 estimate_boundary <- function(dat, input, output, sufficient = FALSE,
@@ -62,14 +64,14 @@ estimate_boundary <- function(dat, input, output, sufficient = FALSE,
     {
       dat$x <- 1 - dat$x
       dat$y <- 1 - dat$y
-      ka_sfa <- suppressWarnings(sfa(dat$y ~ dat$x | dat$x, 
+      ka_sfa <- suppressWarnings(sfa(dat$y ~ dat$x | dat$x,
         ineffDecrease = TRUE, data = dat))
       flip_boundary <- ka_sfa$mleParam[1] + ka_sfa$mleParam[2] * dat$x
       boundary <- 1 - flip_boundary
     }
     if(sufficient == FALSE)
     {
-      ka_sfa <- suppressWarnings(sfa(dat$y ~ dat$x | dat$x, 
+      ka_sfa <- suppressWarnings(sfa(dat$y ~ dat$x | dat$x,
         ineffDecrease = TRUE, data = dat))
       boundary <- ka_sfa$mleParam[1] + ka_sfa$mleParam[2] * input
     }
